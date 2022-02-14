@@ -10,15 +10,20 @@
     Ejemplo: Préstamos, Tarjetas de crédito, Etc.
 </h5>
 
-<div asp-validation-summary="All" class="text-danger" >
-
-</div>
+<div asp-validation-summary="ModelOnly" class="text-danger" ></div>
 
 <form asp-action="Crear">
-    <div class="mb-3">
-        <label for="Nombre" class="form-label">Nombre</label>
-        <input type="text" id="Nombre" name="Nombre" class="form-comtrol" />
-    </div>
-    <button type="submit" class="btn btn-primary ">Enviar</button>
 
+    <div class="mb-3">
+        <label asp-for="Nombre" class="form-label">Nombre</label>
+        <input type="text" asp-for="Nombre"  class="form-comtrol" />
+        <span asp-validation-for="Nombre" class=”text-danger” style="color:red"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary ">Enviar</button>
 </form>
+
+@section Scripts 
+{
+    <partial name="_ValidationScriptsPartial"/>
+}
