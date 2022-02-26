@@ -20,3 +20,7 @@ body {
 input {
     width: 100%;
 }
+
+btn-secondary {
+    color: orangered;
+}

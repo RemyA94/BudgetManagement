@@ -9,11 +9,22 @@ namespace BudgetManagement.Controllers
     public class TiposCuentasController : Controller
     {
         private readonly IRepositorioTiposCuentas repositorioTiposCuentas;
-        public TiposCuentasController(IRepositorioTiposCuentas repositorioTiposCuentas)
+        private readonly IServiciosUsuarios serviciosUsuarios;
+
+        public TiposCuentasController(IRepositorioTiposCuentas repositorioTiposCuentas,
+            IServiciosUsuarios serviciosUsuarios)
         {
             this.repositorioTiposCuentas = repositorioTiposCuentas;
-
+            this.serviciosUsuarios = serviciosUsuarios;
         }
+
+        public async Task<IActionResult> Index() 
+        {
+            var usuarioId = serviciosUsuarios.ObtenerUsuarioId(); 
+            var tipoCuentas= await repositorioTiposCuentas.Obtener(usuarioId);
+            return View(tipoCuentas);
+        }
+
         public IActionResult Crear()
         {
 
@@ -28,7 +39,7 @@ namespace BudgetManagement.Controllers
                 return View(tipoCuenta);
             }
 
-            tipoCuenta.UsuarioId = 1;
+            tipoCuenta.UsuarioId = serviciosUsuarios.ObtenerUsuarioId();
 
             var yaExisteTipoCuenta = await repositorioTiposCuentas.Existe(tipoCuenta.Nombre, tipoCuenta.UsuarioId);
             if (yaExisteTipoCuenta) 
@@ -39,13 +50,14 @@ namespace BudgetManagement.Controllers
                 return View(tipoCuenta);
             }
             await repositorioTiposCuentas.Crear(tipoCuenta);
-            return View();
+            //return View();
+            return RedirectToAction("Index");
         }
 
         [HttpGet]
         public async Task<IActionResult> VerificarExisteTipoCuenta(string nombre) 
         {
-            var usuarioId = 1;
+            var usuarioId = serviciosUsuarios.ObtenerUsuarioId();
             var yaExisteTipoCuenta = await repositorioTiposCuentas.Existe(nombre, usuarioId);
             if (yaExisteTipoCuenta) 
             {
