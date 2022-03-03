@@ -49,8 +49,33 @@ namespace BudgetManagement.Controllers
 
                 return View(tipoCuenta);
             }
-            await repositorioTiposCuentas.Crear(tipoCuenta);
-            //return View();
+            await repositorioTiposCuentas.Crear(tipoCuenta);           
+            return RedirectToAction("Index");
+        }
+
+        // Este metodo nos permite cargar el registro por el Id del usuario.
+        [HttpGet]
+        public async Task<IActionResult> Editar(int Id) 
+        {
+            var usuarioId = serviciosUsuarios.ObtenerUsuarioId();
+            var tipoCuentas = await repositorioTiposCuentas.ObtenerPorId(Id , usuarioId);
+            if (tipoCuentas is null) 
+            {
+                return RedirectToAction("NoEncontrado", "Home");
+            }
+            return View(tipoCuentas);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Editar(TipoCuenta tipoCuenta) 
+        {
+            var usuarioId = serviciosUsuarios.ObtenerUsuarioId();
+            var tipoCuentaExiste = await repositorioTiposCuentas.ObtenerPorId(tipoCuenta.Id, usuarioId);
+            if(tipoCuentaExiste is null) 
+            {
+                return RedirectToAction("NoEncontrado", "Home");
+            }
+            await repositorioTiposCuentas.Actualizar(tipoCuenta);
             return RedirectToAction("Index");
         }
 
