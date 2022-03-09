@@ -26,9 +26,10 @@ namespace BudgetManagement.Servicios
         {
             using var connection = new SqlConnection(connectionString);
             var id = await connection.QuerySingleAsync<int>
-                                                            (@"Insert Into TipoCuentas (Nombre, UsuarioId, Orden)
-                                                                Values (@Nombre, @UsuarioId,0);
-                                                                Select Scope_Identity();", tipoCuenta);
+                                                            (@"TipoCuentas_Insertar",
+                                                            new {UsuarioId = tipoCuenta.UsuarioId,
+                                                            Nombre = tipoCuenta.Nombre},
+                                                            commandType: System.Data.CommandType.StoredProcedure);
             tipoCuenta.Id = id;
         }
 
