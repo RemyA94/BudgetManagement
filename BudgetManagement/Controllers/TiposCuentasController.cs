@@ -3,6 +3,8 @@ using Dapper;
 using BudgetManagement.Servicios;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace BudgetManagement.Controllers
 {
@@ -120,6 +122,22 @@ namespace BudgetManagement.Controllers
         [HttpPost]
         public async Task<IActionResult> Ordenar([FromBody] int[] ids) 
         {
+            var usuarioId = serviciosUsuarios.ObtenerUsuarioId();
+            var tipoCuentas = await repositorioTiposCuentas.Obtener(usuarioId);
+            var idsTipoCuentas = tipoCuentas.Select(x => x.Id);
+
+            var idsTipoCuentasNoPertenecenAlUsuario = ids.Except(idsTipoCuentas).ToList();
+
+            if (idsTipoCuentasNoPertenecenAlUsuario.Count > 0) 
+            {
+                return Forbid();
+            }
+
+            var tipoCuentasOdenados = ids.Select((valor, indice)=>
+            new TipoCuenta() {Id = valor, Orden = indice+1}).AsEnumerable();
+
+            await repositorioTiposCuentas.Odenar(tipoCuentasOdenados);
+
             return Ok(); 
         }
 
