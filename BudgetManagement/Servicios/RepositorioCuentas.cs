@@ -20,8 +20,8 @@ namespace BudgetManagement.Servicios
         {
             using var connection = new SqlConnection(connectionString);
             var id = await connection.QuerySingleAsync<int>(
-                @"Insert Into Cuentas (Nombre, TipoCuentaId, Descripcion, Balance)
-                 Values (@Nombre, @TipoCuentaId, @Descripcion, @Balance);
+                @"Insert Into Cuentas (Nombre, TipoCuentasId, Descripcion, Balance)
+                 Values (@Nombre, @TipoCuentasId, @Descripcion, @Balance);
                  Select SCOPE_IDENTITY();", cuenta);
 
             cuenta.Id = id;
