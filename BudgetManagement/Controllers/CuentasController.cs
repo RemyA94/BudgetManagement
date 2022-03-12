@@ -18,6 +18,12 @@ namespace BudgetManagement.Controllers
             this.serviciosUsuarios = serviciosUsuarios;
             this.repositorioCuentas = repositorioCuentas;
         }
+        public async Task<IActionResult> Index() 
+        {
+            var usarioId = serviciosUsuarios.ObtenerUsuarioId();
+            var cuentasConTipoCuenta = await repositorioCuentas.Buscar(usarioId);
+        }
+
 
         [HttpGet]
         public async Task<IActionResult> Crear()
