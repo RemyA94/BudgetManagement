@@ -22,6 +22,15 @@ namespace BudgetManagement.Controllers
         {
             var usarioId = serviciosUsuarios.ObtenerUsuarioId();
             var cuentasConTipoCuenta = await repositorioCuentas.Buscar(usarioId);
+
+            var modelo = cuentasConTipoCuenta
+                            .GroupBy(x => x.TipoCuenta)
+                            .Select(grupo => new IndiceCuentaViewModel
+                            {
+                                TipoCuenta = grupo.Key,
+                                Cuentas = grupo.AsEnumerable()
+                            }).ToList();
+            return View(modelo);
         }
 
 
