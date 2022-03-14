@@ -27,14 +27,14 @@
 .acordeon-cuentas button > span
 {
     display: flex;
-    justify-content: space-between; /*aqui agregas el espacio entre los tipos de cuentas y la sumatoria de los balances. */
+    justify-content: space-between; 
     width:100%;
 }
 
 .acordeon-cuentas ul li
 {
     display: flex;
-    justify-content: space-between; /*aqui agregas el espacio entre las cuentas y los balances. */
+    justify-content: space-between; 
    
 }
 
