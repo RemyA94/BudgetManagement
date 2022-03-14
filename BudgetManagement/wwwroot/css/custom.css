@@ -1,3 +1,44 @@
 ﻿#reordenable tr {
     cursor: move;
 }
+.Contenedor-totales {
+    display: flex;
+    justify-content: space-around;
+    font-size: 26px;
+    text-align: center;
+}
+.activo
+{
+    color:blue;
+}
+.pasivo {
+    color: red;
+}
+.total {
+    color: dimgrey;
+}
+
+.acordeon-cuentas
+{
+    color: black !important;
+    font-size: 18px;
+}
+
+.acordeon-cuentas button > span
+{
+    display: flex;
+    justify-content: space-between; /*aqui agregas el espacio entre los tipos de cuentas y la sumatoria de los balances. */
+    width:100%;
+}
+
+.acordeon-cuentas ul li
+{
+    display: flex;
+    justify-content: space-between; /*aqui agregas el espacio entre las cuentas y los balances. */
+   
+}
+
+.acordeon-cuentas .accordion-collapse 
+{
+    font-size: 18px;
+}
