@@ -56,7 +56,7 @@ namespace BudgetManagement.Controllers
 
             if (tipoCuentas is null)
             {
-                return RedirectToAction("NO Encontrado", "Home");
+                return RedirectToAction("NoEncontrado", "Home");
             }
             if (!ModelState.IsValid)
             {
@@ -75,7 +75,7 @@ namespace BudgetManagement.Controllers
             var Cuenta = await repositorioCuentas.ObtenerPorId(id, usuarioId);
             if (Cuenta is null)
             {
-                return RedirectToAction("No Encontrado", "Home");
+                return RedirectToAction("NoEncontrado", "Home");
             }
             var modelo = mapper.Map<CuentaCreacionViewModel>(Cuenta);
             modelo.TiposCuentas = await ObtenerTiposCuentas(usuarioId);
@@ -90,19 +90,48 @@ namespace BudgetManagement.Controllers
 
             if (cuenta is null) 
             {
-                return RedirectToAction("No Encontrado", "Home");
+                return RedirectToAction("NoEncontrado", "Home");
             }
 
             var tipoCuenta = await repositorioCuentas.ObtenerPorId(cuentaEditar.Id, usuarioId);
 
             if(tipoCuenta is null) 
             {
-                return RedirectToAction("No Encontrado", "Home");
+                return RedirectToAction("NoEncontrado", "Home");
             }
             await repositorioCuentas.Actualizar(cuentaEditar);
             return RedirectToAction("Index");
-    
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Borrar(int id) 
+        {
+            var usuarioId = serviciosUsuarios.ObtenerUsuarioId();
+            var cuenta = await repositorioCuentas.ObtenerPorId(id, usuarioId);
+
+            if (cuenta is null)
+            {
+                return RedirectToAction("NoEncontrado", "Home");
+            }
+            return View(cuenta);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> BorrarCuenta(int id)
+        {
+            var usuarioId = serviciosUsuarios.ObtenerUsuarioId();
+            var cuenta = await repositorioCuentas.ObtenerPorId(id, usuarioId);
+
+            if (cuenta is null)
+            {
+                return RedirectToAction("NoEncontrado", "Home");
+            }
+            await repositorioCuentas.Borrar(id);
+            return RedirectToAction("Index");
+
+
+        }
+
 
 
         private async Task<IEnumerable<SelectListItem>> ObtenerTiposCuentas(int usuarioId)
