@@ -128,11 +128,7 @@ namespace BudgetManagement.Controllers
             }
             await repositorioCuentas.Borrar(id);
             return RedirectToAction("Index");
-
-
         }
-
-
 
         private async Task<IEnumerable<SelectListItem>> ObtenerTiposCuentas(int usuarioId)
         {
