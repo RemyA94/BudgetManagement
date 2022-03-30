@@ -31,7 +31,7 @@ namespace BudgetManagement.Servicios
         {
             using var connection = new SqlConnection(connectionString);
             return await connection.QueryAsync<Categoria>(
-                "Select * from Categorias Where UsuarioId - @UsuarioId", new { usuarioId });
+                "Select * from Categorias Where UsuarioId = @UsuarioId", new { usuarioId });
         }
     }
 }
