@@ -11,6 +11,8 @@ namespace BudgetManagement.Models
         [StringLength(maximumLength:50, ErrorMessage ="No puede ser mayor a {1} caracteres")]
         [PrimeraLetraMayuscula]
         public string Nombre { get; set; }
+
+        [Display(Name = "Tipo Operación")]
         public TipoOperacion TipoOperacionId { get; set; }
         public int UsuarioId { get; set; }
     }
