@@ -64,5 +64,7 @@ namespace BudgetManagement.Servicios
             var connection = new SqlConnection(connectionString);
             await connection.ExecuteAsync(@"Delete cuentas where id =@id;", new {id});
         }
+
+        
     }
 }

@@ -6,8 +6,10 @@ namespace BudgetManagement.Servicios
 {
     public interface IRepositorioCategorias
     {
+        Task Actualizar(Categoria categoria);
         Task Crear(Categoria categoria);
         Task<IEnumerable<Categoria>> Obtener(int usuarioId);
+        Task<Categoria> ObtenerPorId(int id, int usuarioId);
     }
     public class RepositorioCategoria: IRepositorioCategorias
     {
@@ -31,7 +33,24 @@ namespace BudgetManagement.Servicios
         {
             using var connection = new SqlConnection(connectionString);
             return await connection.QueryAsync<Categoria>(
-                "Select * from Categorias Where UsuarioId = @UsuarioId", new { usuarioId });
+                @"Select * from Categorias Where UsuarioId = @UsuarioId", new { usuarioId });
+        }
+
+        public async Task<Categoria> ObtenerPorId(int id, int usuarioId)
+        {
+            using var connetion = new SqlConnection(connectionString);
+            return await connetion.QueryFirstOrDefaultAsync<Categoria>(
+                @"Select * from Categorias where Id = @Id and UsuarioId = @UsuarioId", 
+                new { id, usuarioId });
+        }
+
+        public async Task Actualizar(Categoria categoria) 
+        {
+            using var connection = new SqlConnection(connectionString);
+            await connection.ExecuteAsync(@"
+            Update Categorias set Nombre=@Nombre, 
+            TipoOperacionId =@TipoOperacionId
+            Where Id = @Id ", categoria);
         }
     }
 }
