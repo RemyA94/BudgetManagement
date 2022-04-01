@@ -74,6 +74,30 @@ namespace BudgetManagement.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Borrar(int id)
+        {
+            var usuarioId = serviciosUsuarios.ObtenerUsuarioId();
+            var categoria = await repositorioCategorias.ObtenerPorId(id, usuarioId);
+            if (categoria is null) 
+            {
+                return RedirectToAction("NoEncotrado, Home");
+            }
+            return View(categoria);
+        }
 
+        [HttpPost]
+        public async Task<IActionResult> BorrarCategoria(int id) 
+        {
+            var usuarioId = serviciosUsuarios.ObtenerUsuarioId();
+            var categorias = await repositorioCategorias.ObtenerPorId(id, usuarioId);
+            if(categorias is null) 
+            {
+                return RedirectToAction("NoEncotrado, Home");
+            }
+            await repositorioCategorias.Borrar(id);
+            return RedirectToAction("Index");
+
+        }
     }
 }
