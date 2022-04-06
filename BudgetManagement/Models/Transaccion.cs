@@ -7,6 +7,8 @@ namespace BudgetManagement.Models
         public int Id { get; set; }
         public int UsuarioId { get; set; }
         public decimal Monto { get; set; }
+
+        [Display(Name = "Fecha Transación")]
         public DateTime FechaTransacion { get; set; } = DateTime.Today;
 
         [Range(1, maximum: int.MaxValue, ErrorMessage = "Debe seleccionar una categoría")]
