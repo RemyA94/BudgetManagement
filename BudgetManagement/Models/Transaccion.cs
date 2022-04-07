@@ -9,6 +9,7 @@ namespace BudgetManagement.Models
         public decimal Monto { get; set; }
 
         [Display(Name = "Fecha Transación")]
+        [DataType(DataType.Date)]
         public DateTime FechaTransacion { get; set; } = DateTime.Today;
 
         [Range(1, maximum: int.MaxValue, ErrorMessage = "Debe seleccionar una categoría")]
