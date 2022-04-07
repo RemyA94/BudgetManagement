@@ -16,10 +16,10 @@
         <span asp-validation-for="Nombre" class="text-danger"></span>
     </div>
 
-    @*"Html.GetEnumSelectList<TipoOperacion>()" es una fucionalidad quu nos permite crear los SelectListItem a partir de un enum *@
+    @*"Html.GetEnumSelectList<TipoOperacion>()" es una fucionalidad que nos permite crear los SelectListItem a partir de un enum *@
     <div class="mb-3">
         <label asp-for="TipoOperacionId" class="form-label"></label>
-        <select asp-for="TipoOperacionId" asp-items="Html.GetEnumSelectList<TipoOperacion>()" class="form-control"></select>
+        <select asp-for="TipoOperacionId" asp-items="Html.GetEnumSelectList<TipoOperacion>()" class="form-select"></select>
         <span asp-validation-for="TipoOperacionId" class="text-danger"></span>
     </div>
 
