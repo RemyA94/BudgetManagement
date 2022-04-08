@@ -10,6 +10,6 @@ namespace BudgetManagement.Models
         public IEnumerable<SelectListItem> Categorias { get; set; }
 
         [Display(Name ="Tipo de operación")]
-        public TipoOperacion TipoOperacionId { get; set; }
+        public TipoOperacion TipoOperacionId { get; set; } = TipoOperacion.Ingesos;
     }
 }
