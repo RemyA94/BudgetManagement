@@ -33,6 +33,41 @@ namespace BudgetManagement.Controllers
             return View(modelo);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Crear(TransaccionCreacionViewModel modelo) 
+        {
+            var usuarioId = serviciosUsuarios.ObtenerUsuarioId();
+            if (!ModelState.IsValid) 
+            {
+                modelo.Cuentas = await ObtenerCuentas(usuarioId);
+                modelo.Categorias = await ObtenerCategorias(usuarioId, modelo.TipoOperacionId);
+                return View(modelo);
+            }
+
+            //aqui validamos que la cuenta que el usuario manda a travez del formulario sea una cuenta valida. 
+            var cuenta = repositorioCuentas.ObtenerPorId(modelo.CuentasId, usuarioId);
+            if(cuenta is null) 
+            {
+                return RedirectToAction("NoEncontrado", "Home");
+            }
+
+            //aqui validamos que la categoria que el usuario manda a travez del formulario sea una cuenta valida. 
+            var categoria = repositorioCategorias.ObtenerPorId(modelo.CategoriaId, usuarioId);
+            if(categoria is null)
+            {
+                return RedirectToAction("NoEncotrado", "Home");
+            }
+
+            modelo.UsuarioId = usuarioId;
+            if(modelo.TipoOperacionId == TipoOperacion.Gastos) 
+            {
+                //si el tipo operacion es un gasto entonces lo guardamos como negativo. 
+                modelo.Monto *= -1;
+            }
+            await repositorioTransacciones.Crear(modelo);
+            return RedirectToAction("Index");
+        }
+
         //Este metodo privado nos va a devolver las cuentas de los usuarios.
         private async Task<IEnumerable<SelectListItem>> ObtenerCuentas(int usuarioId) 
         {

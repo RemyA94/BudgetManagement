@@ -19,15 +19,18 @@ namespace BudgetManagement.Servicios
         }
         
 
-        public async Task Crear(Transaccion transaction) 
+        public async Task Crear(Transaccion transaccion) 
         {
             using var connection =  new  SqlConnection(connectionString);
             var id = await connection.QuerySingleAsync<int>(@"Transacciones_Insertar", 
-                                       new {transaction.UsuarioId, transaction.Monto,
-                                            transaction.FechaTransacion, transaction.CategoriaId,
-                                            transaction.Nota, transaction.CuentaId},
+                                       new {transaccion.UsuarioId,
+                                            transaccion.FechaTransaccion,
+                                            transaccion.Monto,
+                                            transaccion.CategoriaId,
+                                            transaccion.CuentasId,
+                                            transaccion.Nota},
                                             commandType: System.Data.CommandType.StoredProcedure);
-            transaction.Id = id;
+            transaccion.Id = id;
         }
     }
 }

@@ -12,21 +12,21 @@
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
     <div class="mb-3">
-        <label asp-for="FechaTransacion" class="form-label"></label>
-        <input asp-for="FechaTransacion" class="form-control" />
-        <span asp-validation-for="FechaTransacion" class="text-danger"></span>
+        <label asp-for="FechaTransaccion" class="form-label"></label>
+        <input asp-for="FechaTransaccion" class="form-control" />
+        <span asp-validation-for="FechaTransaccion" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
-        <label asp-for="CuentaId" class="form-label"></label>
-        <select asp-for="CuentaId" asp-items="Model.Cuentas" class="form-select"></select>
-        <span asp-validation-for="CuentaId" class="text-danger"></span>
+        <label asp-for="CuentasId" class="form-label"></label>
+        <select asp-for="CuentasId" asp-items="Model.Cuentas" class="form-select"></select>
+        <span asp-validation-for="CuentasId" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
         <label asp-for="TipoOperacionId" class="form-label"></label>
         <select asp-for="TipoOperacionId" asp-items="Html.GetEnumSelectList<TipoOperacion>()"
-            class="form-select" ></select>
+                class="form-select"></select>
         <span asp-validation-for="TipoOperacionId" class="text-danger"></span>
     </div>
 
@@ -56,28 +56,30 @@
 
 @section Scripts
 {
-    <partial name="_ValidationScriptsPartial" />
+<partial name="_ValidationScriptsPartial" />
 
-    <script>
+<script>
 
-        const urlObtenerCategorias = '@Url.Action("ObtenerCategorias")';
-        
-        $(function(){
-            $("#TipoOperacionId").change(async function(){
-                const valorSeleccionado = $(this).val();
+    const urlObtenerCategorias = '@Url.Action("ObtenerCategorias")';
 
-                const respuesta = await fetch(urlObtenerCategorias,
-                {
-                    method: 'POST',
-                    body: valorSeleccionado,
-                    headers: {
-                        'Content-Type':'application/json'
-                    }
-                });
+    $(function(){
+        $("#TipoOperacionId").change(async function(){
+            const valorSeleccionado = $(this).val();
 
-                const json = await respuesta.json();
-                console.log(json);
-            })
+            const respuesta = await fetch(urlObtenerCategorias,
+            {
+                method: 'POST',
+                body: valorSeleccionado,
+                headers: {
+                    'Content-Type':'application/json'
+                }
+            });
+
+            const json = await respuesta.json();
+            const opciones =
+                json.map(categoria =>`<option value=${categoria.value}>${categoria.text}</option>`);
+            $("#CategoriaId").html(opciones);
         })
-    </script>
+    })
+</script>
 }
