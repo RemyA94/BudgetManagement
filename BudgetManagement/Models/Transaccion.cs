@@ -22,5 +22,9 @@ namespace BudgetManagement.Models
 
         [StringLength(maximumLength: 1000, ErrorMessage = "La nota no puede pasar de {1} caracteres")]
         public string Nota { get; set; }
+
+        [Display(Name ="Tipo Operación")]
+        public TipoOperacion TipoOperacionId { get; set; } = TipoOperacion.Ingesos;
+
     }
 }
