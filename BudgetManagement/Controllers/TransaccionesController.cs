@@ -149,6 +149,28 @@ namespace BudgetManagement.Controllers
 
         }
 
+        [HttpPost]
+        public async Task<IActionResult> ObtenerCategorias([FromBody] TipoOperacion tipoOperacion)
+        {
+            var usuarioId = serviciosUsuarios.ObtenerUsuarioId();
+            var categorias = await ObtenerCategorias(usuarioId, tipoOperacion);
+            return Ok(categorias);
+
+        }
+        
+        public async Task<IActionResult> Borrar(int id) 
+        {
+            var usuarioId = serviciosUsuarios.ObtenerUsuarioId();
+            var transaccion = repositorioTransacciones.ObtenerPorId(id, usuarioId);
+
+            if(transaccion == null) 
+            {
+                return RedirectToAction("NoEncontrado", "Home");
+            }
+            await repositorioTransacciones.Borrar(id);
+            return RedirectToAction("Index");
+        }
+
 
 
         //Este metodo privado nos va a devolver las cuentas de los usuarios.
@@ -165,14 +187,6 @@ namespace BudgetManagement.Controllers
             return categorias.Select(x => new SelectListItem(x.Nombre, x.Id.ToString()));
         }
 
-        [HttpPost]
-        public async Task<IActionResult> ObtenerCategorias([FromBody] TipoOperacion tipoOperacion)
-        {
-            var usuarioId = serviciosUsuarios.ObtenerUsuarioId();
-            var categorias = await ObtenerCategorias(usuarioId, tipoOperacion);
-            return Ok(categorias);
-
-        }
 
     }
 }
