@@ -12,15 +12,17 @@ namespace BudgetManagement.Controllers
         private readonly IServiciosUsuarios serviciosUsuarios;
         private readonly IRepositorioCuentas repositorioCuentas;
         private readonly IMapper mapper;
+        private readonly IRepositorioTransacciones repositorioTransacciones;
 
         public CuentasController(IRepositorioTiposCuentas repositorioTiposCuentas,
             IServiciosUsuarios serviciosUsuarios, IRepositorioCuentas repositorioCuentas,
-            IMapper mapper)
+            IMapper mapper, IRepositorioTransacciones repositorioTransacciones)
         {
             this.repositorioTiposCuentas = repositorioTiposCuentas;
             this.serviciosUsuarios = serviciosUsuarios;
             this.repositorioCuentas = repositorioCuentas;
             this.mapper = mapper;
+            this.repositorioTransacciones = repositorioTransacciones;
         }
         public async Task<IActionResult> Index()
         {
@@ -37,6 +39,63 @@ namespace BudgetManagement.Controllers
             return View(modelo);
         }
 
+        //mes y año, ya que vamos a permitir a usuario vizualizar los movimientos de las fechas por mes y año. 
+        public async Task<IActionResult> Detalle(int id, int mes, int año)
+        {
+            var usuarioId = serviciosUsuarios.ObtenerUsuarioId();
+            var cuenta = repositorioTiposCuentas.ObtenerPorId(id, usuarioId);
+
+            if (cuenta is null)
+            {
+                return RedirectToAction("NoEncontrado", "Home");
+            }
+
+            //inicializamos las fechas
+            DateTime fechaInicio;
+            DateTime fechaFin;
+
+            if (mes <= 0 || mes > 12 || año <= 1900)
+            {
+                var hoy = DateTime.Today;
+                fechaInicio = new DateTime(hoy.Year, hoy.Month, 1);
+            }
+            else
+            {
+                fechaInicio = new DateTime(año, mes, 1);
+            }
+            //aqui estamos llevando la FechaFin al ultimo dia del mismo mes de FechaInicio
+            fechaFin = fechaInicio.AddMonths(1).AddDays(-1);
+
+            var obtenerTransaccionesPorCuenta = new ObtenerTransaccionesPorCuenta
+            {
+                CuentasId = id,
+                UsuarioId = usuarioId,
+                FechaInicio = fechaInicio,
+                FechaFin = fechaFin
+            };
+
+            var transacciones = await repositorioTransacciones
+                .ObtenerPorCuentaId(obtenerTransaccionesPorCuenta);
+
+            var modelo = new ReporteTransaccionesDetalladas();
+            //ViewBag.Cuenta = cuenta.Nombre;
+            
+
+            //aqui estamos agrupando nuestras transacciones por fecha, esto nos permite mostrarle al usuario cada 
+            //transaccion por dia en un mes. 
+            var transaccionesPorFecha = transacciones.OrderByDescending(x => x.FechaTransaccion)
+                            .GroupBy(x => x.FechaTransaccion)
+                            .Select(grupo => new ReporteTransaccionesDetalladas.TransaccionesPorFecha()
+                            {
+                                FechaTransaccion = grupo.Key,
+                                Transacciones = grupo.AsEnumerable()
+                            });
+            modelo.TransaccionesAgrupadas = transaccionesPorFecha;
+            modelo.FechaInicio = fechaInicio;
+            modelo.FechaFin = fechaFin;
+
+            return View(modelo);
+        }
 
         [HttpGet]
         public async Task<IActionResult> Crear()
@@ -83,19 +142,19 @@ namespace BudgetManagement.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Editar( CuentaCreacionViewModel cuentaEditar) 
+        public async Task<IActionResult> Editar(CuentaCreacionViewModel cuentaEditar)
         {
             var usuarioId = serviciosUsuarios.ObtenerUsuarioId();
             var cuenta = await repositorioCuentas.ObtenerPorId(cuentaEditar.Id, usuarioId);
 
-            if (cuenta is null) 
+            if (cuenta is null)
             {
                 return RedirectToAction("NoEncontrado", "Home");
             }
 
             var tipoCuenta = await repositorioCuentas.ObtenerPorId(cuentaEditar.Id, usuarioId);
 
-            if(tipoCuenta is null) 
+            if (tipoCuenta is null)
             {
                 return RedirectToAction("NoEncontrado", "Home");
             }
@@ -104,7 +163,7 @@ namespace BudgetManagement.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Borrar(int id) 
+        public async Task<IActionResult> Borrar(int id)
         {
             var usuarioId = serviciosUsuarios.ObtenerUsuarioId();
             var cuenta = await repositorioCuentas.ObtenerPorId(id, usuarioId);

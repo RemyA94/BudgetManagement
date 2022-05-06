@@ -25,6 +25,7 @@ namespace BudgetManagement.Models
 
         [Display(Name ="Tipo Operación")]
         public TipoOperacion TipoOperacionId { get; set; } = TipoOperacion.Ingesos;
-
+        public string Cuenta { get; set; }
+        public string Categoria { get; set; }
     }
 }
