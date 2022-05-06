@@ -43,7 +43,7 @@ namespace BudgetManagement.Controllers
         public async Task<IActionResult> Detalle(int id, int mes, int año)
         {
             var usuarioId = serviciosUsuarios.ObtenerUsuarioId();
-            var cuenta = repositorioTiposCuentas.ObtenerPorId(id, usuarioId);
+            var cuenta = await repositorioTiposCuentas.ObtenerPorId(id, usuarioId);
 
             if (cuenta is null)
             {
@@ -78,8 +78,8 @@ namespace BudgetManagement.Controllers
                 .ObtenerPorCuentaId(obtenerTransaccionesPorCuenta);
 
             var modelo = new ReporteTransaccionesDetalladas();
-            //ViewBag.Cuenta = cuenta.Nombre;
-            
+            ViewBag.Cuenta = cuenta.Nombre;
+
 
             //aqui estamos agrupando nuestras transacciones por fecha, esto nos permite mostrarle al usuario cada 
             //transaccion por dia en un mes. 
