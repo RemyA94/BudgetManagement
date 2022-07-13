@@ -37,8 +37,7 @@ namespace BudgetManagement.Servicios
             transaccion.Id = id;
         }
 
-        public async Task<IEnumerable<Transaccion>> 
-            ObtenerPorCuentaId(ObtenerTransaccionesPorCuenta modelo)
+        public async Task<IEnumerable<Transaccion>>ObtenerPorCuentaId(ObtenerTransaccionesPorCuenta modelo)
         {
             using var connection = new SqlConnection(connectionString);
             return await connection.QueryAsync<Transaccion>
