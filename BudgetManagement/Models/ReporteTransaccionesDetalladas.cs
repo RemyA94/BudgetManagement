@@ -9,8 +9,8 @@
 
         //aqui tomando como parametro una fecha inico y una fecha fin vamos a calcular el total de depositos [ingresos] y retiros[gastos]
         public IEnumerable<TransaccionesPorFecha> TransaccionesAgrupadas { get; set; }
-        public decimal BalanceDepositos => TransaccionesAgrupadas.Sum(x => BalanceDepositos);
-        public decimal BalanceRetiros => TransaccionesAgrupadas.Sum(x => BalanceRetiros);
+        public decimal BalanceDepositos => TransaccionesAgrupadas.Sum(x => x.BalanceDepositos);
+        public decimal BalanceRetiros => TransaccionesAgrupadas.Sum(x => x.BalanceRetiros);
         //calculamso el total que vienen siendo la resta entre depositos y retiros
         public decimal Total => BalanceDepositos - BalanceRetiros;
 

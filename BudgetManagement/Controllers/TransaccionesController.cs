@@ -79,7 +79,7 @@ namespace BudgetManagement.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Editar(int id)
+        public async Task<IActionResult> Editar(int id, string urlRetorno = null)
         {
             var usuarioId = serviciosUsuarios.ObtenerUsuarioId();
             var transaccion = await repositorioTransacciones.ObtenerPorId(id, usuarioId);
@@ -105,6 +105,7 @@ namespace BudgetManagement.Controllers
             modelo.CuentaAnteriorId = transaccion.CuentasId;
             modelo.Categorias = await ObtenerCategorias(usuarioId, transaccion.TipoOperacionId);
             modelo.Cuentas = await ObtenerCuentas(usuarioId);
+            modelo.UrlRetorno = urlRetorno;
 
             return View(modelo);
 
@@ -145,7 +146,17 @@ namespace BudgetManagement.Controllers
             await repositorioTransacciones.Actualizar(transaccion,
                 modelo.MontoAnteriorId, modelo.CuentaAnteriorId);
 
-            return RedirectToAction("Index");
+            if (string.IsNullOrEmpty(modelo.UrlRetorno))
+            {
+                return RedirectToAction("Index");
+
+            }
+            else
+            {
+                return LocalRedirect(modelo.UrlRetorno);
+            }
+
+
 
         }
 

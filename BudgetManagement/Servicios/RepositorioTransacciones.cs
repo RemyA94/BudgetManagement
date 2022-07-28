@@ -47,8 +47,8 @@ namespace BudgetManagement.Servicios
                     Inner Join Categorias c
                     on c.Id = t.CategoriaId
                     Inner Join Cuentas cu
-                    on cu.Id = t.CuentasId
-                    Where t.CuentasId = @CuentasId and t.UsuarioId = @UsuarioId
+                    on cu.Id = t.CuentaId
+                    Where t.CuentaId = @CuentasId and t.UsuarioId = @UsuarioId
                     and FechaTransaccion between @FechaInicio and @FechaFin
                     ", modelo);
         }

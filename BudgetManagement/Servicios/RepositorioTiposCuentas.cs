@@ -26,7 +26,7 @@ namespace BudgetManagement.Servicios
         {
             using var connection = new SqlConnection(connectionString);
             var id = await connection.QuerySingleAsync<int>
-                                                            (@"TipoCuentas_Insertar",
+                                                            (@"TiposCuentas_Insertar",
                                                             new {usuarioId = tipoCuenta.UsuarioId,
                                                             nombre = tipoCuenta.Nombre},
                                                             commandType: System.Data.CommandType.StoredProcedure);
@@ -36,7 +36,7 @@ namespace BudgetManagement.Servicios
         public async Task<bool> Existe(string nombre, int usuarioId) 
         {
             using var connetion = new SqlConnection(connectionString);
-            var existe = await connetion.QueryFirstOrDefaultAsync<int>(@"Select 1 from TipoCuentas
+            var existe = await connetion.QueryFirstOrDefaultAsync<int>(@"Select 1 from TiposCuentas
                                                                       where Nombre = @Nombre and UsuarioId = @UsuarioId;",
                                                                       new {nombre, usuarioId});
             return existe == 1;
@@ -47,7 +47,7 @@ namespace BudgetManagement.Servicios
         {
             using var connection = new SqlConnection(connectionString);
             return await connection.QueryAsync<TipoCuenta>(@"Select Id, Nombre, Orden
-                                                                from TipoCuentas
+                                                                from TiposCuentas
                                                                 Where UsuarioId = @UsuarioId
                                                                 Order by Orden;", new { usuarioId });
            
@@ -56,15 +56,15 @@ namespace BudgetManagement.Servicios
         public async Task Actualizar (TipoCuenta tipoCuenta) 
         {
             using var connection= new SqlConnection(connectionString);
-            await connection.ExecuteAsync("Update TipoCuentas Set Nombre = @Nombre Where Id = @Id;", tipoCuenta);
+            await connection.ExecuteAsync("Update TiposCuentas Set Nombre = @Nombre Where Id = @Id;", tipoCuenta);
         }
 
         public async Task<TipoCuenta> ObtenerPorId(int id, int usuarioId)
         {
             using var connection = new SqlConnection(connectionString);
             return await connection.QueryFirstOrDefaultAsync<TipoCuenta>(@"Select Id, Nombre, Orden
-                                                                from TipoCuentas
-                                                                Where Id = @Id and usuarioId = @UsuarioId;", 
+                                                                from TiposCuentas
+                                                                Where Id = @Id and UsuarioId = @UsuarioId", 
                                                                 new { id, usuarioId });
 
         }
@@ -72,13 +72,13 @@ namespace BudgetManagement.Servicios
         public async Task Borrar(int id)
         {
             using var connection = new SqlConnection(connectionString);
-            await connection.ExecuteAsync("Delete TipoCuentas where Id = @Id;", new { id });
+            await connection.ExecuteAsync("Delete TiposCuentas where Id = @Id;", new { id });
 
         }
 
         public async Task Odenar(IEnumerable<TipoCuenta> tipoCuentasOrdenados) 
         {
-            var query = "update TipoCuentas set Orden = @Orden where Id = @Id;";
+            var query = "update TiposCuentas set Orden = @Orden where Id = @Id;";
             using var connection = new SqlConnection(connectionString);
             await connection.ExecuteAsync(query, tipoCuentasOrdenados);
         }

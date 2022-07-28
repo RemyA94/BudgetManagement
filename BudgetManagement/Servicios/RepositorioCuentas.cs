@@ -24,7 +24,7 @@ namespace BudgetManagement.Servicios
         {
             using var connection = new SqlConnection(connectionString);
             var id = await connection.QuerySingleAsync<int>(
-                @"Insert Into Cuentas (Nombre, TipoCuentasId, Descripcion, Balance)
+                @"Insert Into Cuentas (Nombre, TipoCuentaId, Descripcion, Balance)
                  Values (@Nombre, @TipoCuentasId, @Descripcion, @Balance);
                  Select SCOPE_IDENTITY();", cuenta);
 
@@ -36,8 +36,8 @@ namespace BudgetManagement.Servicios
             using var connection = new SqlConnection(connectionString);
             return await connection.QueryAsync<Cuenta>(@"Select Cuentas.Id, Cuentas.Nombre, Cuentas.Balance, tc.Nombre as TipoCuenta
                                                         from Cuentas
-                                                        Inner Join TipoCuentas as tc 
-                                                        on tc.Id = Cuentas.TipoCuentasId
+                                                        Inner Join TiposCuentas as tc 
+                                                        on tc.Id = Cuentas.TipoCuentaId
                                                         where tc.UsuarioId = @UsuarioId
                                                         order by tc.Orden", new {usuarioId});
         }
@@ -46,8 +46,8 @@ namespace BudgetManagement.Servicios
             using var connection = new SqlConnection(connectionString);
             return await connection.QueryFirstOrDefaultAsync<Cuenta>(@"Select Cuentas.Id, Cuentas.Nombre, Cuentas.Balance, Descripcion, tc.Id
                                                         from Cuentas
-                                                        Inner Join TipoCuentas as tc 
-                                                        on tc.Id = Cuentas.TipoCuentasId
+                                                        Inner Join TiposCuentas as tc 
+                                                        on tc.Id = Cuentas.TipoCuentaId
                                                         where tc.UsuarioId = @UsuarioId and Cuentas.Id = @Id", new {id, usuarioId });
         }
         public async Task Actualizar(CuentaCreacionViewModel cuenta)
@@ -55,7 +55,7 @@ namespace BudgetManagement.Servicios
             using var connection = new SqlConnection(connectionString);
             await connection.ExecuteAsync(@"update Cuentas
                                                 set Nombre = @Nombre, Balance = @Balance, Descripcion = @Descripcion,
-                                                TipoCuentasId = @TipoCuentasId
+                                                TipoCuentaId = @TipoCuentasId
                                                 where Cuentas.Id = @id;", cuenta);
         }
 
